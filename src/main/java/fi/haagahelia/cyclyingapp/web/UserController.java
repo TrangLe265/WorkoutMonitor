@@ -1,4 +1,4 @@
-package fi.haagahelia.cyclyingapp.domain;
+package fi.haagahelia.cyclyingapp.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import fi.haagahelia.cyclyingapp.domain.ActivityService;
 
 import java.io.IOException;
 
@@ -35,7 +37,7 @@ public class UserController {
     private final ActivityService service; 
 
     // Endpoint for uploading activities, requires authentication
-    @PostMapping(value = "/upload", consumes = {"multipart/form-data"})
+    @PostMapping(value = "/dashboard", consumes = {"multipart/form-data"})
     public ResponseEntity<Integer> uploadActivity(
         @RequestPart("file") MultipartFile file
     ) throws IOException {
