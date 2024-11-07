@@ -1,8 +1,8 @@
 package fi.haagahelia.cyclyingapp.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,20 +14,34 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class LoginController {
+    @Autowired
+    private UserRepository userRepository; 
 
-    @GetMapping("/login")
-    public String login(HttpServletRequest request, Model model,String error, String logout){
+    @GetMapping({"/login"})
+    public String login(Model model, HttpServletRequest request){
+        String error = request.getParameter("error");
+        String logout = request.getParameter("logout");
 
         if (error != null){
             model.addAttribute("error", true); 
             model.addAttribute("errorMessage", "Invalid username or password"); 
         }
+        if (logout != null){
+            model.addAttribute("logout", true); 
+            model.addAttribute("logoutMessage", "You have been logged out successfully"); 
+        }
 
-        return "login";
+        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName()); 
+        model.addAttribute(("csrfToken"), csrfToken);
+ 
+        
+        
+    return "login";
+
     }
 
     @GetMapping("/dashboard")
-    public String home(){
+    public String dashboard(){
         return "dashboard"; 
     }
 }

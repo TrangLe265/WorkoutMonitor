@@ -19,8 +19,11 @@ public class SecurityConfig {
     @Bean //bean allowed methods to be registed as Spring-managed bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http //configure authorizations for http request
-                .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers( "/","/login","/error","/api/v1/users/dashboard").permitAll()
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/v1/users/upload") // Disable CSRF for the upload endpoint
+        )    
+            .authorizeHttpRequests(authorize -> authorize
+                    .requestMatchers( "/","/login","/error").permitAll()
+                    .requestMatchers("/api/v1/users/upload").hasRole("USER") 
                     .anyRequest().authenticated() //but any other pages needs logging in 
                 )
                 .formLogin(form -> form
@@ -28,12 +31,8 @@ public class SecurityConfig {
                     .defaultSuccessUrl("/dashboard", true)
                     .permitAll()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/dashboard",true)
-                )
                 .logout(logout -> logout
-                    .logoutSuccessUrl("/")
+                    .logoutSuccessUrl("/login")
                     .permitAll()
                 ); 
 
@@ -55,7 +54,12 @@ public class SecurityConfig {
             .roles("ADMIN")
             .build();
         
-        return new InMemoryUserDetailsManager(defaultUser); // Return the user details service
+        UserDetails regularUser  = User.builder()
+            .username("user")
+            .password(passwordEncoder().encode("user"))
+            .roles("USER")
+            .build();
+        return new InMemoryUserDetailsManager(defaultUser, regularUser); // Return the user details service
     }
 
 }

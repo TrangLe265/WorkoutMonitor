@@ -15,14 +15,13 @@ public class User {
     @Id
     @GeneratedValue
     private Long id; 
-    private String oauth2Id; 
-    private String email; 
-    private String name;
-    private String picture; 
-
+    
+    private String username; 
+    private String password;
+    private String role;
+    
     @OneToMany(mappedBy = "user")
     private Set<Activity> activities;  
-    
 
 }
 

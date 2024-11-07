@@ -22,12 +22,18 @@ public class ActivityService {
     private final ActivityRepository repository;
 
     public Integer uploadActivities(MultipartFile file) throws IOException {
+        if(repository == null){
+            throw new IllegalStateException("ActivityRepository is not injected"); 
+        }
+
+        System.out.println("Starting uploadActivities method");
         Set<Activity> activities = parseCsv(file); 
         repository.saveAll(activities); 
         return activities.size(); 
     }
 
     private Set<Activity> parseCsv(MultipartFile file) throws IOException{
+        System.out.println("Starting parseCsv method");
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             //map the headers, define what columns do we want to read from the csv file
             HeaderColumnNameMappingStrategy<ActivityCsvRepresentation> strategy = new HeaderColumnNameMappingStrategy<>(); 
@@ -40,7 +46,7 @@ public class ActivityService {
                 .withIgnoreLeadingWhiteSpace(true)
                 .build(); 
 
-            return csvToBean.parse()
+            Set<Activity> activities = csvToBean.parse()
                 .stream()
                 .map(csvLine -> Activity.builder()
                         .date(csvLine.getDate())
@@ -51,8 +57,11 @@ public class ActivityService {
                         .build()
                )
                 .collect(Collectors.toSet()); 
+                System.out.println("Finished parsing CSV file");
+            return activities;
 
         } catch (IOException e) {
+            System.err.println("Error reading CSV file: " + e.getMessage());
             throw new IOException("Error reading CSV file", e); // Proper error handling
         }
         

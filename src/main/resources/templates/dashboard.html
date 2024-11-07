@@ -8,8 +8,16 @@
 <body>
     <h1>Upload Activities</h1>
     <form action="/api/v1/users/upload" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <input type="file" name="file" required>
         <button type="submit">Upload</button>
     </form>
+
+    <div class="col-md-4" style="padding:20px 0">
+		<form th:action="@{/logout}" method="post">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+			<input type="submit" value="Sign Out" class="btn btn-sm btn-danger"/>
+		</form>
+	</div>
 </body>
 </html>
