@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.Buffer;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,19 +20,19 @@ public class ActivityService {
 
     private final ActivityRepository repository;
 
-    public Integer uploadActivities(MultipartFile file) throws IOException {
+    public Set<Activity> uploadActivities(MultipartFile file) throws IOException {
         if(repository == null){
             throw new IllegalStateException("ActivityRepository is not injected"); 
         }
-
         System.out.println("Starting uploadActivities method");
         Set<Activity> activities = parseCsv(file); 
         repository.saveAll(activities); 
-        return activities.size(); 
+        return activities; 
     }
 
     private Set<Activity> parseCsv(MultipartFile file) throws IOException{
         System.out.println("Starting parseCsv method");
+
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             //map the headers, define what columns do we want to read from the csv file
             HeaderColumnNameMappingStrategy<ActivityCsvRepresentation> strategy = new HeaderColumnNameMappingStrategy<>(); 
@@ -44,6 +43,7 @@ public class ActivityService {
                 .withMappingStrategy(strategy)
                 .withIgnoreEmptyLine(true)
                 .withIgnoreLeadingWhiteSpace(true)
+                .withSeparator(';')
                 .build(); 
 
             Set<Activity> activities = csvToBean.parse()
@@ -66,5 +66,4 @@ public class ActivityService {
         }
         
     }
-
 }

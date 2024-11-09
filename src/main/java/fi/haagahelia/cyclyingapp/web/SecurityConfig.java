@@ -1,20 +1,31 @@
 package fi.haagahelia.cyclyingapp.web;
 
+//import fi.haagahelia.cyclyingapp.domain.User;
+//import fi.haagahelia.cyclyingapp.domain.UserRepository; 
+//import org.springframework.boot.CommandLineRunner;
+//import org.springframework.boot.CommandLineRunner;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import fi.haagahelia.cyclyingapp.CustomUserDetailsService;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
 
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService){
+        this.customUserDetailsService = customUserDetailsService; 
+    }
 
     @Bean //bean allowed methods to be registed as Spring-managed bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -23,7 +34,8 @@ public class SecurityConfig {
         )    
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers( "/","/login","/error").permitAll()
-                    .requestMatchers("/api/v1/users/upload").hasRole("USER") 
+                    .requestMatchers("/dashboard").authenticated()
+                    .requestMatchers("/api/v1/users/upload").authenticated()
                     .anyRequest().authenticated() //but any other pages needs logging in 
                 )
                 .formLogin(form -> form
@@ -45,21 +57,21 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
+    /* 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails defaultUser = User.builder()
-            .username("admin")
-            .password(passwordEncoder().encode("admin"))
-            .roles("ADMIN")
-            .build();
-        
-        UserDetails regularUser  = User.builder()
-            .username("user")
-            .password(passwordEncoder().encode("user"))
-            .roles("USER")
-            .build();
-        return new InMemoryUserDetailsManager(defaultUser, regularUser); // Return the user details service
-    }
+    public CommandLineRunner demo(UserRepository userRepository) {
+        return (args) -> {
+            // Sample logic to add a user to the database
+            User user = new User();
+
+            String hashedPassword = passwordEncoder().encode("password");
+            user.setUsername("user");
+            user.setPassword(hashedPassword); 
+			user.setRole("USER"); 
+            userRepository.save(user);
+            System.out.println("Sample user added to the database!");
+        };
+	}
+        */
 
 }
