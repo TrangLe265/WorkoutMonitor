@@ -8,7 +8,7 @@
     </head>
 <body>
     <h1>Upload Activities</h1>
-    <h2>Hello <span th:text="${<#authentication.principal.username}">Username</span></h2>
+    <h2>Hello <span sec:authentication="name">User</span></h2>
 
     <p>Upload new CSV file:</p>
     <form action="/api/v1/users/upload" method="post" enctype="multipart/form-data">

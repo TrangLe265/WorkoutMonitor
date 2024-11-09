@@ -4,6 +4,8 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,15 +20,27 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ActivityService {
 
-    private final ActivityRepository repository;
+    private final ActivityRepository activityRepository; 
+    private final UserRepository userRepository; 
 
     public Set<Activity> uploadActivities(MultipartFile file) throws IOException {
-        if(repository == null){
+        if(activityRepository == null){
             throw new IllegalStateException("ActivityRepository is not injected"); 
         }
+
+        //finding the current username
+        String username = SecurityContextHolder.getContext().getAuthentication().getName(); 
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found")); 
+
         System.out.println("Starting uploadActivities method");
+
+        //parse activities from csv file
         Set<Activity> activities = parseCsv(file); 
-        repository.saveAll(activities); 
+
+        //link the activities to the user
+        activities.forEach(activity -> activity.setUser(user)); 
+        
+        activityRepository.saveAll(activities); 
         return activities; 
     }
 

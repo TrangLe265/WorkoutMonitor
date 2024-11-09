@@ -28,7 +28,7 @@ public class Activity {
     private float distance; 
     private float aveSpeed;
    @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id") // this name does not have to match the id field in the User class
     private User user; 
 
 }
