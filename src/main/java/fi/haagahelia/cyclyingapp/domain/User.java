@@ -7,7 +7,9 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Getter
 @Setter
 @Entity
@@ -19,7 +21,8 @@ public class User {
     private String password;
     private String role;
     @OneToMany(mappedBy = "user")
-    private Set<Activity> activities;  
+    @JsonIgnore
+    private List<Activity> activities;  
 
 }
 

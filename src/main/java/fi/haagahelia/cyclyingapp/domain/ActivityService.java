@@ -13,7 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +23,7 @@ public class ActivityService {
     private final ActivityRepository activityRepository; 
     private final UserRepository userRepository; 
 
-    public Set<Activity> uploadActivities(MultipartFile file) throws IOException {
+    public List<Activity> uploadActivities(MultipartFile file) throws IOException {
         if(activityRepository == null){
             throw new IllegalStateException("ActivityRepository is not injected"); 
         }
@@ -35,7 +35,7 @@ public class ActivityService {
         System.out.println("Starting uploadActivities method");
 
         //parse activities from csv file
-        Set<Activity> activities = parseCsv(file); 
+        List<Activity> activities = parseCsv(file); 
 
         //link the activities to the user
         activities.forEach(activity -> activity.setUser(user)); 
@@ -44,7 +44,7 @@ public class ActivityService {
         return activities; 
     }
 
-    private Set<Activity> parseCsv(MultipartFile file) throws IOException{
+    private List<Activity> parseCsv(MultipartFile file) throws IOException{
         System.out.println("Starting parseCsv method");
 
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
@@ -60,7 +60,7 @@ public class ActivityService {
                 .withSeparator(';')
                 .build(); 
 
-            Set<Activity> activities = csvToBean.parse()
+            List<Activity> activities = csvToBean.parse()
                 .stream()
                 .map(csvLine -> Activity.builder()
                         .date(csvLine.getDate())
@@ -70,7 +70,7 @@ public class ActivityService {
                         .aveSpeed(csvLine.getAveSpeed())
                         .build()
                )
-                .collect(Collectors.toSet()); 
+                .collect(Collectors.toList()); 
                 System.out.println("Finished parsing CSV file");
             return activities;
 
