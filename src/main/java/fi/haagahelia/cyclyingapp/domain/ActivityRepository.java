@@ -10,5 +10,5 @@ public interface ActivityRepository extends CrudRepository<Activity, Long> {
     List<Activity> findAll();
     List<Activity> findByActivityType(String activityType);
     Optional<Activity> findByActivityId(Long activityId);
+    
 }
-

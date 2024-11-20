@@ -1,14 +1,14 @@
 package fi.haagahelia.cyclyingapp.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+
+
 import org.springframework.stereotype.Controller;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import fi.haagahelia.cyclyingapp.domain.ActivityRepository;
 import fi.haagahelia.cyclyingapp.domain.UserRepository;
 
 
-@RestController
+@Controller
 @RequestMapping("/api") 
 public class ActivitiesController {
 
@@ -44,4 +44,10 @@ public class ActivitiesController {
         return  activityRepository.findByActivityType(activityType);
     }
 
+    @RequestMapping(value = "/activities/delete/id/{id}", method=RequestMethod.DELETE)
+    public ResponseEntity<?> deleteActivity(@PathVariable("id") Long activityId) {
+        activityRepository.deleteById(activityId);
+        return ResponseEntity.ok("Activity delete successfully"); 
+    }
+        
 }

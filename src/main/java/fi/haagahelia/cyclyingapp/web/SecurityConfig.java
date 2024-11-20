@@ -30,7 +30,7 @@ public class SecurityConfig {
     @Bean //bean allowed methods to be registed as Spring-managed bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http //configure authorizations for http request
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/upload") // Disable CSRF for the upload endpoint
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/upload", "/api/*") // Disable CSRF for the upload endpoint
         )    
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers( "/","/login","/error").permitAll()
