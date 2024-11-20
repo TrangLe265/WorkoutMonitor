@@ -1,6 +1,8 @@
 package fi.haagahelia.cyclyingapp.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,14 +12,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import org.springframework.stereotype.Controller;
+
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import fi.haagahelia.cyclyingapp.domain.Activity;
-import fi.haagahelia.cyclyingapp.domain.ActivityRepository;
-import fi.haagahelia.cyclyingapp.domain.UserRepository;
+import fi.haagahelia.cyclyingapp.domain.*; 
 
-
+//All restful services for activities in this filel
 @Controller
 @RequestMapping("/api") 
 public class ActivitiesController {
@@ -30,8 +32,25 @@ public class ActivitiesController {
     //Restful service to get all activities
     @RequestMapping(value="/activities", method = RequestMethod.GET)
     public @ResponseBody List<Activity> showAll() {
-        return activityRepository.findAll(); // Return all activities in JSON format
+        return activityRepository.findAll(); 
     }
+
+    //Restful service to get all activities by the curreny user
+    @RequestMapping(value="/activities/byUser/{userName}", method = RequestMethod.GET)
+    public @ResponseBody List<Activity> showActivitiesByUser(@PathVariable("userName") String userName,Principal principal ) {
+        Optional<User> currentUser = userRepository.findByUsername(principal.getName());   
+        if (currentUser.isPresent()) {
+            User user = currentUser.get(); 
+            if (user.getUsername().equals(userName)) {
+                return activityRepository.findByUser(user); 
+            } else {
+                throw new IllegalArgumentException("User not found");
+            }
+        }else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }   
+    
 
     // RESTful service to get activity by id
     @RequestMapping(value="/activities/id/{id}", method = RequestMethod.GET)
@@ -39,15 +58,26 @@ public class ActivitiesController {
     	return activityRepository.findByActivityId(activityId);
     } 
     
+    //Restful service to get activities by type
     @RequestMapping(value ="/activities/type/{activityType}", method=RequestMethod.GET)
     public @ResponseBody List<Activity> findActivitiesByType(@PathVariable("activityType") String activityType) {
         return  activityRepository.findByActivityType(activityType);
     }
 
+    //Restful servive to delete
     @RequestMapping(value = "/activities/delete/id/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<?> deleteActivity(@PathVariable("id") Long activityId) {
-        activityRepository.deleteById(activityId);
-        return ResponseEntity.ok("Activity delete successfully"); 
+        try {
+            if (activityRepository.existsById(activityId)){
+                activityRepository.deleteById(activityId);
+                return ResponseEntity.ok("Activity delete successfully"); 
+            }else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Activity not found");
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting activity");
+        }
+        
     }
         
 }

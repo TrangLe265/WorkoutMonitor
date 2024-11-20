@@ -1,0 +1,45 @@
+<!-- src/main/resources/templates/activities.html -->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Add New Activity</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    </head>
+<body>
+    <div class="container d-flex flex-column align-items-center justify-content-center vh-100">
+        <h2 class="mb-4 text-center">Add New Activity</h2>
+
+        <div class="card shadow" style="width: 100%; max-width: 500px;">
+            <div class="card-body">
+                <form th:object="${activity}" th:action="@{/save}" method="post">
+                    <div class="mb-3">
+                        <label for="activityType" class="form-label">Activity Type:</label>
+                        <input type="text" id="activityType" name="activityType" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date" class="form-control" required  />
+                    </div>
+                    <div class="mb-3">
+                        <label for="movingTime">Moving Time (hours):</label>
+                        <input type="number" id="movingTime" name="movingTime" step="0.1" class="form-control" required  />
+                    </div>
+                    <div class="mb-3">
+                        <label for="distance">Distance (km):</label>
+                        <input type="number" id="distance" name="distance" step="0.01" class="form-control" required  />
+                    </div>
+                    <div class="mb-3">
+                        <label for="aveSpeed">Average Speed (km/h):</label>
+                        <input type="number" id="aveSpeed" name="aveSpeed" step="0.01" class="form-control" required  />
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>  
+</body>
+</html>

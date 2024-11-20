@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import fi.haagahelia.cyclyingapp.CustomUserDetailsService;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.core.Ordered;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -36,6 +37,7 @@ public class SecurityConfig {
                     .requestMatchers( "/","/login","/error").permitAll()
                     .requestMatchers("/dashboard").authenticated()
                     .requestMatchers("/upload").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/activities/delete/id/**").authenticated()
                     .anyRequest().authenticated() //but any other pages needs logging in 
                 )
                 .formLogin(form -> form
