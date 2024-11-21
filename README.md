@@ -8,6 +8,10 @@ Workout Monitor is a web application designed to track personal fitness activiti
 * Basic RESTful API: Supports creating and managing workout data via APIs.
 * Basic responsive frontend: Built with Thymeleaf and Bootstrap
 * The app does allow multiple users, each will have their own frontend view
+<img width="300" alt="Screenshot 2024-11-21 at 16 42 07" src="https://github.com/user-attachments/assets/b2fb26a7-e459-4bd8-9e6e-da8279cbf0c9">
+<img width="300" alt="Screenshot 2024-11-21 at 16 42 28" src="https://github.com/user-attachments/assets/8325b049-5f76-424b-be06-4555d63a4901">
+
+<img width="605" alt="Screenshot 2024-11-21 at 16 33 00" src="https://github.com/user-attachments/assets/6238a264-9fd7-48d6-bffc-ce6aa6655239">
 
 ## ✨ Tech stack: 
 * Backend: Spring Boot
