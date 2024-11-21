@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import fi.haagahelia.cyclyingapp.domain.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 

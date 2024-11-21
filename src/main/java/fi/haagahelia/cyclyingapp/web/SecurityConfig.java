@@ -1,9 +1,6 @@
 package fi.haagahelia.cyclyingapp.web;
 
-import fi.haagahelia.cyclyingapp.domain.User;
-import fi.haagahelia.cyclyingapp.domain.UserRepository; 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.CommandLineRunner;
+import fi.haagahelia.cyclyingapp.domain.*; 
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 import fi.haagahelia.cyclyingapp.CustomUserDetailsService;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
@@ -31,13 +30,13 @@ public class SecurityConfig {
     @Bean //bean allowed methods to be registed as Spring-managed bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http //configure authorizations for http request
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/upload", "/api/*") // Disable CSRF for the upload endpoint
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/upload", "/api/**") // Disable CSRF for the upload endpoint
         )    
             .authorizeHttpRequests(authorize -> authorize
+                    .requestMatchers("/api/**").permitAll()
                     .requestMatchers( "/","/login","/error").permitAll()
-                    .requestMatchers("/dashboard").authenticated()
-                    .requestMatchers("/upload").authenticated()
-                    .requestMatchers(HttpMethod.DELETE, "/activities/delete/id/**").authenticated()
+                    .requestMatchers("/dashboard", "/upload").authenticated()
+                    //.requestMatchers(HttpMethod.DELETE, "/activities/delete/id/**").authenticated()
                     .anyRequest().authenticated() //but any other pages needs logging in 
                 )
                 .formLogin(form -> form
