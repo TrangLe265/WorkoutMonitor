@@ -1,7 +1,8 @@
 package fi.haagahelia.cyclyingapp.web;
 
-import fi.haagahelia.cyclyingapp.domain.*; 
+import fi.haagahelia.cyclyingapp.domain.*;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -59,7 +60,7 @@ public class SecurityConfig {
     }
 
     
-    {/*@Bean
+   /* @Bean
     public CommandLineRunner demo(UserRepository userRepository) {
         return (args) -> {
             // Sample logic to add a user to the database
@@ -72,7 +73,7 @@ public class SecurityConfig {
             userRepository.save(user);
             System.out.println("Sample user added to the database!");
         };
-	}*/}
+	}*/
     
 
 }

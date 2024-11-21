@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.stereotype.Controller;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
