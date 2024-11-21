@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder     
+//Bind the csv file to the ActivityCsvRepresentation class
 public class ActivityCsvRepresentation {
     @CsvBindByName(column = "Activity Date" )
     private String date; 

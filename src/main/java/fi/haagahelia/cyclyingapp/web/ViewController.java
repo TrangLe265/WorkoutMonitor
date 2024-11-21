@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 
-
+//ALL views for the application in this file
 @Controller
 public class ViewController {
 

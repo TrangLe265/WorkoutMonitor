@@ -16,6 +16,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//Implement and save the activities to the database
 @Service
 @RequiredArgsConstructor
 public class ActivityService {

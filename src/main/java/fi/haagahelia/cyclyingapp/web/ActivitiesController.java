@@ -31,24 +31,7 @@ public class ActivitiesController {
     @RequestMapping(value="/activities", method = RequestMethod.GET)
     public @ResponseBody List<Activity> showAll() {
         return activityRepository.findAll(); 
-    }
-
-    //Restful service to get all activities by the curreny user
-    @RequestMapping(value="/activities/byUser/{userName}", method = RequestMethod.GET)
-    public @ResponseBody List<Activity> showActivitiesByUser(@PathVariable("userName") String userName,Principal principal ) {
-        Optional<User> currentUser = userRepository.findByUsername(principal.getName());   
-        if (currentUser.isPresent()) {
-            User user = currentUser.get(); 
-            if (user.getUsername().equals(userName)) {
-                return activityRepository.findByUser(user); 
-            } else {
-                throw new IllegalArgumentException("User not found");
-            }
-        }else {
-            throw new IllegalArgumentException("User not found");
-        }
-    }   
-    
+    }    
 
     // RESTful service to get activity by id
     @RequestMapping(value="/activities/id/{id}", method = RequestMethod.GET)
